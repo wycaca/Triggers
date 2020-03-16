@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">WalkTriggers</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <!-- weather -->
+<!--    <string name="weather_api">http://api.openweathermap.org/data/2.5/weather?</string>-->
+<!--    <string name="weather_api_lat">lat=</string>-->
+<!--    <string name="weather_api_lon">lon=</string>-->
+<!--    <string name="weather_api_appId">appid=2e8962a7c5a75b5dc185b1811c573002</string>-->
+</resources>
