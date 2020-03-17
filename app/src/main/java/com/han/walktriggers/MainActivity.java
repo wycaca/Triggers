@@ -1,15 +1,14 @@
 package com.han.walktriggers;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.han.walktriggers.data.message.AlarmService;
 import com.han.walktriggers.data.online.WeatherService;
+import com.han.walktriggers.data.sensor.SensorService;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -41,5 +40,8 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED){
             requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, PHYISCAL_ACTIVITY);
         }
+
+        WeatherService weatherService = new WeatherService(this);
+        weatherService.getNewestWeather();
     }
 }

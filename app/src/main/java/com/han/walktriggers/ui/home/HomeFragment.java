@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,20 +19,21 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.han.walktriggers.R;
+import com.han.walktriggers.data.message.AlarmService;
 import com.han.walktriggers.data.online.WeatherService;
+import com.han.walktriggers.data.sensor.SensorService;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
-    private FusedLocationProviderClient fusedLocationClient;
     private Context mContext;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
+        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         final TextView textView = root.findViewById(R.id.text_home);
+        final Button weatherActionButton = root.findViewById(R.id.weather_button);
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -40,24 +42,14 @@ public class HomeFragment extends Fragment {
         });
         mContext = getContext();
 
-        getLocation();
-        return root;
-    }
+        weatherActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlarmService alarmService = new AlarmService(mContext);
+                alarmService.addWeatherTask();
+            }
+        });
 
-    private void getLocation() {
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(getActivity() , new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            // todo Logic to handle location object
-                            // save in database?
-                            WeatherService weatherService = new WeatherService(mContext);
-                            weatherService.getWeatherJson(location.getLatitude(), location.getLongitude());
-                        }
-                    }
-                });
+        return root;
     }
 }

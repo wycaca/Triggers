@@ -9,4 +9,7 @@
 <!--    <string name="weather_api_lat">lat=</string>-->
 <!--    <string name="weather_api_lon">lon=</string>-->
 <!--    <string name="weather_api_appId">appid=2e8962a7c5a75b5dc185b1811c573002</string>-->
+
+    <string name="channel_name">Trigger Channel</string>
+    <string name="channel_description">Trigger Channel</string>
 </resources>
