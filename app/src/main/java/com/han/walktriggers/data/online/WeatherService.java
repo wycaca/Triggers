@@ -1,10 +1,9 @@
 package com.han.walktriggers.data.online;
 
 import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.SensorManager;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -13,9 +12,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.han.walktriggers.TaskService;
 import com.han.walktriggers.data.AppDataBase;
-import com.han.walktriggers.data.online.entity.Weather;
+import com.han.walktriggers.data.entity.UserInfo;
+import com.han.walktriggers.data.entity.Weather;
+import com.han.walktriggers.data.sensor.SensorService;
 import com.han.walktriggers.utils.DateUtils;
 
 import org.json.JSONArray;
@@ -31,7 +31,8 @@ public class WeatherService {
     private final static String TAG = "weatherService";
     private Context mContext;
     private WeatherDao weatherDao;
-    private SharedPreferences weatherSp;
+//    private SharedPreferences weatherSp;
+    private SensorService sensorService;
     private AlarmManager mAlarmManager;
     private static int REQUEST_CODE = 1001;
 
@@ -39,7 +40,8 @@ public class WeatherService {
         mContext = context;
         AppDataBase dataBase = AppDataBase.getInstance(mContext);
         weatherDao = dataBase.weatherDao();
-        weatherSp = mContext.getSharedPreferences("location", MODE_PRIVATE);
+//        weatherSp = mContext.getSharedPreferences("location", MODE_PRIVATE);
+        sensorService = new SensorService(mContext);
     }
 
     public void addWeatherRequest(double lat, double lon) {
@@ -133,7 +135,14 @@ public class WeatherService {
         if(weather != null) {
             return weather;
         }else {
-            addWeatherRequest(weatherSp.getFloat("lat", 0), weatherSp.getFloat("lon", 0));
+            UserInfo userInfo = sensorService.getUserInfo();
+            if (userInfo != null && userInfo.getLatitude() != null) {
+                addWeatherRequest(userInfo.getLatitude(), userInfo.getLongitude());
+            } else {
+                // when first time run, must no weather info
+                addWeatherRequest(0,0);
+            }
+
             weather = new Weather();
             return weather;
         }

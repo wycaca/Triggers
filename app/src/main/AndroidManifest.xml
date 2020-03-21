@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.han.walktriggers" >
+    package="com.han.walktriggers">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_notifications_active_black_24dp"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_notifications_active_black_24dp"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
-        <service
-            android:name=".TaskService">
+        android:theme="@style/AppTheme">
+        <receiver
+            android:name=".data.message.MessageReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
+
+        <service android:name=".TaskService">
             <intent-filter>
                 <action android:name="com.han.walktriggers.action.WEATHER" />
             </intent-filter>
@@ -23,7 +30,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

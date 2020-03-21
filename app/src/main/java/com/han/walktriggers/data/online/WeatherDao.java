@@ -7,7 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.han.walktriggers.data.online.entity.Weather;
+import com.han.walktriggers.data.entity.Weather;
 
 @Dao
 public interface WeatherDao {

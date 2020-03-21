@@ -11,15 +11,18 @@ import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.han.walktriggers.data.converters.Converters;
+import com.han.walktriggers.data.entity.UserInfo;
 import com.han.walktriggers.data.online.WeatherDao;
-import com.han.walktriggers.data.online.entity.Weather;
+import com.han.walktriggers.data.entity.Weather;
+import com.han.walktriggers.data.sensor.UserInfoDao;
 
-@Database(entities = {Weather.class}, version = 1, exportSchema = false)
+@Database(entities = {Weather.class, UserInfo.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDataBase extends RoomDatabase {
     private static volatile AppDataBase INSTANCE;
 
     public abstract WeatherDao weatherDao();
+    public abstract UserInfoDao userInfoDao();
 
     public static AppDataBase getInstance(Context context) {
         if (INSTANCE == null) {

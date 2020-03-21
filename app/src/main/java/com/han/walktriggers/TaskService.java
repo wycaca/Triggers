@@ -1,10 +1,8 @@
 package com.han.walktriggers;
 
-import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,25 +11,22 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
+import com.han.walktriggers.data.entity.UserInfo;
 import com.han.walktriggers.data.online.WeatherService;
-import com.han.walktriggers.data.online.entity.Weather;
+import com.han.walktriggers.data.entity.Weather;
 import com.han.walktriggers.data.sensor.SensorService;
-import com.han.walktriggers.utils.DateUtils;
 
 /**
- * An {@link IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- * <p>
- * helper methods.
+ * This service includes different tasks, such as weather check.
+ * same intent, but different tasks have different action names
  */
 public class TaskService extends IntentService {
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
     public static final String ACTION_WEATHER = "com.han.walktriggers.action.WEATHER";
-//    private static final String ACTION_BAZ = "com.han.walktriggers.action.BAZ";
+//    public static final String ACTION_BAZ = "com.han.walktriggers.action.BAZ";
 
-    // TODO: Rename parameters
-    private static final String EXTRA_PARAM1 = "com.han.walktriggers.extra.PARAM1";
-    private static final String EXTRA_PARAM2 = "com.han.walktriggers.extra.PARAM2";
+//    private static final String EXTRA_PARAM1 = "com.han.walktriggers.extra.PARAM1";
+//    private static final String EXTRA_PARAM2 = "com.han.walktriggers.extra.PARAM2";
 
     private static final String CHANNEL_ID = "channel_id_1";
     private static final String TAG = "TaskService";
@@ -60,7 +55,6 @@ public class TaskService extends IntentService {
      *
      * @see IntentService
      */
-    // TODO: Customize helper method
 //    public static void startActionBaz(Context context, String param1, String param2) {
 //        Intent intent = new Intent(context, TaskIntentService.class);
 //        intent.setAction(ACTION_BAZ);
@@ -94,19 +88,27 @@ public class TaskService extends IntentService {
 
         sensorService = new SensorService(mContext);
         weatherService = new WeatherService(mContext);
-        weatherSp = mContext.getSharedPreferences("location", MODE_PRIVATE);
+//        weatherSp = mContext.getSharedPreferences("location", MODE_PRIVATE);
 
         // get location
         SensorService sensorService = new SensorService(this);
         // get location info and save in sp
-        sensorService.setLocationSp();
+        sensorService.setLocationInfo();
 
+        UserInfo userInfo = sensorService.getUserInfo();
         // send a weather request if success, save the weather info in database
-        weatherService.addWeatherRequest(weatherSp.getFloat("lat", 0), weatherSp.getFloat("lon", 0));
+//        weatherService.addWeatherRequest(weatherSp.getFloat("lat", 0), weatherSp.getFloat("lon", 0));
+        if (userInfo != null && userInfo.getLatitude() != null) {
+            Log.d(TAG, "check pass, do weather action");
+            weatherService.addWeatherRequest(userInfo.getLatitude(), userInfo.getLongitude());
+            pushWeatherNotification(makeWeatherNotificationStr());
+        }
+    }
 
+    private String makeWeatherNotificationStr() {
         // get weather info
         Weather weather = weatherService.getNewestWeather();
-        Log.d(TAG, weather.toString());
+//        Log.d(TAG, weather.toString());
         // notification
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(weather.toString());
@@ -127,8 +129,7 @@ public class TaskService extends IntentService {
         } else {
             stringBuilder.append("Keep health.");
         }
-        String remindStr = stringBuilder.toString();
-        pushWeatherNotification(remindStr);
+        return stringBuilder.toString();
     }
 
     private void pushWeatherNotification(String remindStr) {
