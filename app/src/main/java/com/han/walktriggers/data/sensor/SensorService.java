@@ -40,6 +40,7 @@ public class SensorService {
 
     public void setLocationInfo() {
         Log.d(TAG, "try to get location and save in database");
+        // use google api to save power
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(mContext.getMainExecutor(), new OnSuccessListener<Location>() {

@@ -45,6 +45,10 @@ public class WeatherService {
     }
 
     public void addWeatherRequest(double lat, double lon) {
+        // todo data source manage
+        // more api -> improve
+        // different -> don't call trigger
+
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(mContext);
         String weatherApi = "https://api.openweathermap.org/data/2.5/weather?";

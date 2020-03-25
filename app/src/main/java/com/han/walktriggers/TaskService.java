@@ -105,6 +105,8 @@ public class TaskService extends IntentService {
         }
     }
 
+    // todo Notification manage
+    // todo same weather -> different triggers
     private String makeWeatherNotificationStr() {
         // get weather info
         Weather weather = weatherService.getNewestWeather();
