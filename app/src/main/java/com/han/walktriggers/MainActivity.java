@@ -1,40 +1,22 @@
 package com.han.walktriggers;
 
 import android.Manifest;
-import android.app.AlarmManager;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.han.walktriggers.data.message.AlarmService;
-import com.han.walktriggers.data.online.WeatherService;
-import com.han.walktriggers.data.sensor.SensorService;
+import com.han.walktriggers.data.source.WeatherService;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     private static final int PHYISCAL_ACTIVITY = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
-
         // check Permission
         if(ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED){
@@ -43,5 +25,14 @@ public class MainActivity extends AppCompatActivity {
 
         WeatherService weatherService = new WeatherService(this);
         weatherService.getNewestWeather();
+
+        AlarmService alarmService = new AlarmService(this);
+        alarmService.addWeatherTask();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.finish();
     }
 }

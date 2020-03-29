@@ -1,9 +1,8 @@
-package com.han.walktriggers.data.sensor;
+package com.han.walktriggers.data.source;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.net.wifi.WifiInfo;
@@ -15,10 +14,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.han.walktriggers.data.AppDataBase;
 import com.han.walktriggers.data.entity.UserInfo;
+import com.han.walktriggers.data.entity.UserInfoDao;
 
 import java.math.BigDecimal;
-
-import static android.content.Context.MODE_PRIVATE;
 
 public class SensorService {
     private static final String TAG = "sensorService";

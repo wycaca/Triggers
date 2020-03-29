@@ -12,9 +12,9 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 
 import com.han.walktriggers.data.entity.UserInfo;
-import com.han.walktriggers.data.online.WeatherService;
+import com.han.walktriggers.data.source.WeatherService;
 import com.han.walktriggers.data.entity.Weather;
-import com.han.walktriggers.data.sensor.SensorService;
+import com.han.walktriggers.data.source.SensorService;
 
 /**
  * This service includes different tasks, such as weather check.

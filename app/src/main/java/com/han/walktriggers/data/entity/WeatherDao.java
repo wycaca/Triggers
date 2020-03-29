@@ -1,4 +1,4 @@
-package com.han.walktriggers.data.online;
+package com.han.walktriggers.data.entity;
 
 import androidx.room.Dao;
 import androidx.room.Delete;

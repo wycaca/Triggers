@@ -39,3 +39,32 @@
 ## TaskService
 
    This service includes all the actions
+
+
+~~framework background~~
+
+    //todo manage triggers, add them easily
+    // manage data source
+    // manage notification
+
+    //todo other apps has context provider
+    // access;
+
+    // config file? data source
+    // different data source -> complex
+    // more api -> improve
+    // different -> don't call trigger
+
+    // more complex notifications (images, buttons...)
+    // step histories, less, more -> notification
+
+    // 5 triggers
+    // in report -> screen shots -> how the trigger works
+    // highlight ->
+
+    // behaviour changes
+    // -> different user types -> type of triggers
+    // a lot of | often miss targets
+    // pick the right notification
+
+    // low power -> save power -> don't check weather

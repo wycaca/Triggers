@@ -1,9 +1,7 @@
-package com.han.walktriggers.data.online;
+package com.han.walktriggers.data.source;
 
 import android.app.AlarmManager;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.hardware.SensorManager;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -15,7 +13,7 @@ import com.android.volley.toolbox.Volley;
 import com.han.walktriggers.data.AppDataBase;
 import com.han.walktriggers.data.entity.UserInfo;
 import com.han.walktriggers.data.entity.Weather;
-import com.han.walktriggers.data.sensor.SensorService;
+import com.han.walktriggers.data.entity.WeatherDao;
 import com.han.walktriggers.utils.DateUtils;
 
 import org.json.JSONArray;
@@ -24,8 +22,6 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
-import static android.content.Context.MODE_PRIVATE;
 
 public class WeatherService {
     private final static String TAG = "weatherService";
