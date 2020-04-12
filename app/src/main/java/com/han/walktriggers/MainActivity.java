@@ -5,8 +5,9 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
-import com.han.walktriggers.data.message.AlarmService;
 import com.han.walktriggers.data.source.WeatherService;
+import com.han.walktriggers.entity.TriggerInfo;
+import com.han.walktriggers.trigger.TriggerService;
 
 import androidx.core.content.ContextCompat;
 
@@ -26,8 +27,16 @@ public class MainActivity extends Activity {
         WeatherService weatherService = new WeatherService(this);
         weatherService.getNewestWeather();
 
-        AlarmService alarmService = new AlarmService(this);
-        alarmService.addWeatherTask();
+        TriggerService triggerService = new TriggerService(this);
+
+        TriggerInfo triggerInfo = new TriggerInfo();
+        triggerInfo.setTaskName(TaskService.ACTION_WEATHER);
+
+        // for test
+        Long times = System.currentTimeMillis() + 12 * 1000;
+        triggerInfo.setTime(times);
+
+        triggerService.addTrigger(triggerInfo);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.han.walktriggers.data.entity;
+package com.han.walktriggers.data.dao;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -7,7 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.han.walktriggers.data.entity.UserInfo;
+import com.han.walktriggers.entity.UserInfo;
 
 
 @Dao

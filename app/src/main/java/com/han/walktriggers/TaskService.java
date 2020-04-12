@@ -1,20 +1,17 @@
 package com.han.walktriggers;
 
 import android.app.IntentService;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Build;
+
 import android.util.Log;
 
-import androidx.core.app.NotificationCompat;
-
-import com.han.walktriggers.data.entity.UserInfo;
+import com.han.walktriggers.entity.NotificationInfo;
+import com.han.walktriggers.entity.UserInfo;
 import com.han.walktriggers.data.source.WeatherService;
-import com.han.walktriggers.data.entity.Weather;
+import com.han.walktriggers.entity.Weather;
 import com.han.walktriggers.data.source.SensorService;
+import com.han.walktriggers.trigger.notification.NotificationService;
 
 /**
  * This service includes different tasks, such as weather check.
@@ -28,14 +25,11 @@ public class TaskService extends IntentService {
 //    private static final String EXTRA_PARAM1 = "com.han.walktriggers.extra.PARAM1";
 //    private static final String EXTRA_PARAM2 = "com.han.walktriggers.extra.PARAM2";
 
-    private static final String CHANNEL_ID = "channel_id_1";
     private static final String TAG = "TaskService";
-    private static final int NOTIFICATION_ID = 1;
 
-    private Context mContext;
-    private SharedPreferences weatherSp;
     private SensorService sensorService;
     private WeatherService weatherService;
+    private NotificationService notificationService;
 
 
     public TaskService() {
@@ -66,7 +60,6 @@ public class TaskService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
-            mContext = getApplicationContext();
             final String action = intent.getAction();
             if (ACTION_WEATHER.equals(action)) {
                 handleActionWeather();
@@ -86,9 +79,9 @@ public class TaskService extends IntentService {
     private void handleActionWeather() {
         Log.d(TAG, "start handel weather action");
 
-        sensorService = new SensorService(mContext);
-        weatherService = new WeatherService(mContext);
-//        weatherSp = mContext.getSharedPreferences("location", MODE_PRIVATE);
+        sensorService = new SensorService(this);
+        weatherService = new WeatherService(this);
+        notificationService = new NotificationService(this);
 
         // get location
         SensorService sensorService = new SensorService(this);
@@ -101,27 +94,38 @@ public class TaskService extends IntentService {
         if (userInfo != null && userInfo.getLatitude() != null) {
             Log.d(TAG, "check pass, do weather action");
             weatherService.addWeatherRequest(userInfo.getLatitude(), userInfo.getLongitude());
-            pushWeatherNotification(makeWeatherNotificationStr());
+            pushWeatherNotification();
         }
     }
 
     // todo Notification manage
     // todo same weather -> different triggers
-    private String makeWeatherNotificationStr() {
+    private void pushWeatherNotification() {
+        NotificationInfo notificationInfo = new NotificationInfo();
+
+        String title = "Today Weather";
+        int iconId = 0;
+
         // get weather info
         Weather weather = weatherService.getNewestWeather();
-//        Log.d(TAG, weather.toString());
+        Log.d(TAG, weather.getCityName());
         // notification
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(weather.toString());
         switch (weather.getMain()) {
             case "Rain":
+                iconId = R.drawable.ic_rain;
                 stringBuilder.append("You'd better take an umbrella. ");
                 break;
             case "Snow":
+                iconId = R.drawable.ic_snow;
                 stringBuilder.append("You'd better stay at home. ");
                 break;
+            case "Clouds":
+                iconId = R.drawable.ic_cloud;
+                break;
             default:
+                iconId = R.drawable.ic_sunny;
                 stringBuilder.append("Have a nice day. ");
         }
         if(weather.getTemp() > 30) {
@@ -131,41 +135,15 @@ public class TaskService extends IntentService {
         } else {
             stringBuilder.append("Keep health.");
         }
-        return stringBuilder.toString();
+
+        notificationInfo.setTitle(title);
+        notificationInfo.setMessage(stringBuilder.toString());
+        notificationInfo.setLargeIconId(iconId);
+
+        notificationService.pushNotification(notificationInfo);
     }
 
-    private void pushWeatherNotification(String remindStr) {
-        createNotificationChannel();
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notifications_black_24dp)
-                .setContentTitle("Today Weather")
-                .setContentText(remindStr)
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(remindStr))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true)
-                .setOnlyAlertOnce(true);
-        NotificationManager mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (mNotificationManager != null) {
-            mNotificationManager.notify(NOTIFICATION_ID, builder.build());
-        }
-    }
 
-    private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = mContext.getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
 
     /**
      * Handle action Baz in the provided background thread with the provided

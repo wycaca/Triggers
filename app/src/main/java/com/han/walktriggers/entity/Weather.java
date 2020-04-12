@@ -1,4 +1,4 @@
-package com.han.walktriggers.data.entity;
+package com.han.walktriggers.entity;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

@@ -11,10 +11,10 @@ import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.han.walktriggers.data.converters.Converters;
-import com.han.walktriggers.data.entity.UserInfo;
-import com.han.walktriggers.data.entity.WeatherDao;
-import com.han.walktriggers.data.entity.Weather;
-import com.han.walktriggers.data.entity.UserInfoDao;
+import com.han.walktriggers.entity.UserInfo;
+import com.han.walktriggers.data.dao.WeatherDao;
+import com.han.walktriggers.entity.Weather;
+import com.han.walktriggers.data.dao.UserInfoDao;
 
 @Database(entities = {Weather.class, UserInfo.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})

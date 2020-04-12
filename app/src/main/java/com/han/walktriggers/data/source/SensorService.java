@@ -1,8 +1,6 @@
 package com.han.walktriggers.data.source;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.net.wifi.WifiInfo;
@@ -13,8 +11,8 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.han.walktriggers.data.AppDataBase;
-import com.han.walktriggers.data.entity.UserInfo;
-import com.han.walktriggers.data.entity.UserInfoDao;
+import com.han.walktriggers.entity.UserInfo;
+import com.han.walktriggers.data.dao.UserInfoDao;
 
 import java.math.BigDecimal;
 
@@ -25,14 +23,10 @@ public class SensorService {
     private SensorManager mSensorManager;
     private FusedLocationProviderClient fusedLocationClient;
     private UserInfoDao userInfoDao;
-    private SharedPreferences sp;
-    private Editor editor;
 
     public SensorService(Context context) {
         mContext = context;
         mSensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
-//        sp = mContext.getSharedPreferences("location", MODE_PRIVATE);
-//        editor = sp.edit();
         userInfoDao = AppDataBase.getInstance(mContext).userInfoDao();
     }
 
@@ -58,10 +52,6 @@ public class SensorService {
                             userInfo.setLatitude(latitude);
                             userInfo.setLongitude(longitude);
                             addUserInfo(userInfo);
-
-//                            editor.putFloat("lat", latitude);
-//                            editor.putFloat("lon", longitude);
-//                            editor.apply();
                         } else {
                             Log.e(TAG, "cannot get location info");
                         }

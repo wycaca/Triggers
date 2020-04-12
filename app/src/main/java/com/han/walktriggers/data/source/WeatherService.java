@@ -11,10 +11,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.han.walktriggers.data.AppDataBase;
-import com.han.walktriggers.data.entity.UserInfo;
-import com.han.walktriggers.data.entity.Weather;
-import com.han.walktriggers.data.entity.WeatherDao;
+import com.han.walktriggers.entity.UserInfo;
+import com.han.walktriggers.entity.Weather;
+import com.han.walktriggers.data.dao.WeatherDao;
 import com.han.walktriggers.utils.DateUtils;
+import com.han.walktriggers.utils.ProperUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +23,7 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Properties;
 
 public class WeatherService {
     private final static String TAG = "weatherService";
@@ -47,8 +49,11 @@ public class WeatherService {
 
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(mContext);
-        String weatherApi = "https://api.openweathermap.org/data/2.5/weather?";
-        String apiId = "2e8962a7c5a75b5dc185b1811c573002";
+//        String weatherApi = "https://api.openweathermap.org/data/2.5/weather?";
+//        String apiId = "2e8962a7c5a75b5dc185b1811c573002";
+        Properties dataSourcePro = ProperUtil.getProperties(mContext);
+        String weatherApi = dataSourcePro.getProperty("weatherApi");
+        String apiId = dataSourcePro.getProperty("apiId");
         weatherApi = weatherApi + "lat=" + lat + "&lon=" + lon + "&appid=" + apiId;
 
         Log.d(TAG, weatherApi);
