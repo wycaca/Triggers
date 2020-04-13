@@ -6,6 +6,8 @@ import android.content.Context;
 
 import android.util.Log;
 
+import com.han.walktriggers.data.source.ContextCustomer;
+import com.han.walktriggers.entity.History;
 import com.han.walktriggers.entity.NotificationInfo;
 import com.han.walktriggers.entity.UserInfo;
 import com.han.walktriggers.data.source.WeatherService;
@@ -20,7 +22,7 @@ import com.han.walktriggers.trigger.notification.NotificationService;
 public class TaskService extends IntentService {
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
     public static final String ACTION_WEATHER = "com.han.walktriggers.action.WEATHER";
-//    public static final String ACTION_BAZ = "com.han.walktriggers.action.BAZ";
+    public static final String ACTION_CHECK_PROGRESS = "com.han.walktriggers.action.CHECK_PROGRESS";
 
 //    private static final String EXTRA_PARAM1 = "com.han.walktriggers.extra.PARAM1";
 //    private static final String EXTRA_PARAM2 = "com.han.walktriggers.extra.PARAM2";
@@ -30,6 +32,7 @@ public class TaskService extends IntentService {
     private SensorService sensorService;
     private WeatherService weatherService;
     private NotificationService notificationService;
+    private ContextCustomer contextCustomer;
 
 
     public TaskService() {
@@ -59,17 +62,42 @@ public class TaskService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        sensorService = new SensorService(this);
+        weatherService = new WeatherService(this);
+        notificationService = new NotificationService(this);
+        contextCustomer = new ContextCustomer(this);
+
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_WEATHER.equals(action)) {
                 handleActionWeather();
             }
-//            else if (ACTION_BAZ.equals(action)) {
+            else if (ACTION_CHECK_PROGRESS.equals(action)) {
 //                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
 //                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-//                handleActionBaz(param1, param2);
-//            }
+                handleActionCheckProgress();
+            }
         }
+    }
+
+    private void handleActionCheckProgress() {
+        int target_process = 80;
+        Log.d(TAG, "start handel check progress");
+        NotificationInfo notificationInfo = new NotificationInfo();
+
+        History history = contextCustomer.getLastHistory();
+        int progress = history.getProgress();
+        if (history != null) {
+            if (progress < target_process) {
+                notificationInfo.setTitle("Goal is not finished!");
+                notificationInfo.setMessage("Your goal progress is: " + progress
+                        + ", less than " + target_process + ". Go!");
+                notificationInfo.setProgress(progress);
+
+                notificationService.pushNotification(notificationInfo);
+            }
+        }
+
     }
 
     /**
@@ -79,13 +107,9 @@ public class TaskService extends IntentService {
     private void handleActionWeather() {
         Log.d(TAG, "start handel weather action");
 
-        sensorService = new SensorService(this);
-        weatherService = new WeatherService(this);
-        notificationService = new NotificationService(this);
-
         // get location
         SensorService sensorService = new SensorService(this);
-        // get location info and save in sp
+        // get location info and save
         sensorService.setLocationInfo();
 
         UserInfo userInfo = sensorService.getUserInfo();

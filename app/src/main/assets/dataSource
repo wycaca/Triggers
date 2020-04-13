@@ -1,3 +1,5 @@
-weatherApi = https://api.openweathermap.org/data/2.5/weather?
-apiId = 2e8962a7c5a75b5dc185b1811c573002
+weatherApi=https://api.openweathermap.org/data/2.5/weather?
+apiId=2e8962a7c5a75b5dc185b1811c573002
 
+goalUri=content://com.han.walktracker.provider/goals
+historyUri=content://com.han.walktracker.provider/history

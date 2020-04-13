@@ -10,7 +10,9 @@ public class NotificationInfo {
     private String message;
     private Boolean isBigText;
     private Integer largeIconId;
-    private Boolean hasLargeIcon;
+    private Boolean hasLargeIcon = false;
+    private Integer progress;
+    private Boolean hasProgress = false;
 
     public void setMessage(String message) {
         this.message = message;
@@ -23,5 +25,10 @@ public class NotificationInfo {
     public void setLargeIconId(int iconId) {
         this.largeIconId = iconId;
         this.hasLargeIcon = true;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
+        this.hasProgress = true;
     }
 }

@@ -4,10 +4,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -27,8 +24,8 @@ public class NotificationService {
     private static final String CHANNEL_ID = "channel_id_1";
     private static final int NOTIFICATION_ID = 1;
 
-    public NotificationService(Context mContext) {
-        this.mContext = mContext;
+    public NotificationService(Context context) {
+        this.mContext = context;
     }
 
     private void createNotificationChannel() {
@@ -78,6 +75,10 @@ public class NotificationService {
             vectorDrawable.draw(canvas);
 
             builder.setLargeIcon(icon);
+        }
+
+        if (notificationInfo.getHasProgress()) {
+            builder.setProgress(100, notificationInfo.getProgress(), false);
         }
         return builder.build();
     }
