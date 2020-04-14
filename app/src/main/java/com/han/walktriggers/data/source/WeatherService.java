@@ -54,6 +54,12 @@ public class WeatherService {
         Properties dataSourcePro = ProperUtil.getProperties(mContext);
         String weatherApi = dataSourcePro.getProperty("weatherApi");
         String apiId = dataSourcePro.getProperty("apiId");
+
+        // save 0.00 and protect user privacy
+        BigDecimal bg = new BigDecimal(lat);
+        lat = bg.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
+        bg = new BigDecimal(lon);
+        lon = bg.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
         weatherApi = weatherApi + "lat=" + lat + "&lon=" + lon + "&appid=" + apiId;
 
         Log.d(TAG, weatherApi);

@@ -29,21 +29,37 @@ public class MainActivity extends Activity {
         WeatherService weatherService = new WeatherService(this);
         weatherService.getNewestWeather();
 
+        addTriggers();
+    }
+
+    private void addTriggers() {
         TriggerService triggerService = new TriggerService(this);
 
         // weather trigger
         TriggerInfo triggerInfo = new TriggerInfo();
         triggerInfo.setTaskName(TaskService.ACTION_WEATHER);
         // for test
-        Long times = System.currentTimeMillis() + 12 * 1000;
-        triggerInfo.setTime(times);
-//        triggerService.addTrigger(triggerInfo);
-
-        // check progress trigger
-        triggerInfo.setTaskName(TaskService.ACTION_CHECK_PROGRESS);
-//        times = System.currentTimeMillis() + 24 * 1000;
+        Long times = System.currentTimeMillis() + 10 * 1000;
         triggerInfo.setTime(times);
         triggerService.addTrigger(triggerInfo);
+
+        // check progress trigger at 19:00
+        triggerInfo.setTaskName(TaskService.ACTION_CHECK_PROGRESS);
+//        triggerInfo.setTime(19);
+//        triggerService.addTrigger(triggerInfo);
+
+        // check history
+//        triggerInfo.setTaskName(TaskService.ACTION_CHECK_HISTORY);
+//        triggerService.addTrigger(triggerInfo);
+
+        // goal suggestion
+        triggerInfo.setTaskName(TaskService.ACTION_SUGGEST_GOAL);
+//        triggerService.addTrigger(triggerInfo);
+
+        // wifi ssid check
+        triggerInfo = new TriggerInfo();
+        triggerInfo.setTaskName(TaskService.ACTION_CHECK_WIFI_SSID);
+//        triggerService.addTrigger(triggerInfo);
     }
 
     @Override

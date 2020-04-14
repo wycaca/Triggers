@@ -1,4 +1,4 @@
-package com.han.walktriggers.trigger.notification;
+package com.han.walktriggers.trigger;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -79,6 +79,11 @@ public class NotificationService {
 
         if (notificationInfo.getHasProgress()) {
             builder.setProgress(100, notificationInfo.getProgress(), false);
+        }
+
+        if (notificationInfo.getHasAction()) {
+            builder.addAction(R.drawable.ic_notifications_active_24dp,
+                    notificationInfo.getGoal().toString(), notificationInfo.getPendingIntent());
         }
         return builder.build();
     }

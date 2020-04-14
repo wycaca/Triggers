@@ -1,5 +1,7 @@
 package com.han.walktriggers.entity;
 
+import android.app.PendingIntent;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +15,9 @@ public class NotificationInfo {
     private Boolean hasLargeIcon = false;
     private Integer progress;
     private Boolean hasProgress = false;
+    private Boolean hasAction = false;
+    private PendingIntent pendingIntent;
+    private Goal goal;
 
     public void setMessage(String message) {
         this.message = message;
@@ -30,5 +35,10 @@ public class NotificationInfo {
     public void setProgress(int progress) {
         this.progress = progress;
         this.hasProgress = true;
+    }
+
+    public void setPendingIntent(PendingIntent pendingIntent) {
+        this.pendingIntent = pendingIntent;
+        this.hasAction = true;
     }
 }

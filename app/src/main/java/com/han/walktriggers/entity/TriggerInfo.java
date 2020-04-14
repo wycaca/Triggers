@@ -13,7 +13,7 @@ public class TriggerInfo {
     private Boolean isAlarm;
     private Long time;
 
-    private Integer type;
+    private String strParam1;
 
 //    private NotificationInfo notificationInfo;
 

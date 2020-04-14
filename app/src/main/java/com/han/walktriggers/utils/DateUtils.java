@@ -13,6 +13,9 @@ public class DateUtils {
     public final static String DATE_FORMAT = "EEE MMM dd HH:mm:ss Z yyyy";
     private static final String TAG = "DateUtils";
 
+    public static Date fromTimestamp(Long value) {
+        return value == null ? null : new Date(value);
+    }
 
     public static Date dateStrToDate(String dateStr) {
         DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.UK);
@@ -23,6 +26,11 @@ public class DateUtils {
             Log.e(TAG, e.getMessage() + " check dateStr");
         }
         return date;
+    }
+
+    public static boolean isToday(Date date) {
+        Date today = new Date();
+        return isSameDay(today, date);
     }
 
     public static boolean isSameDay(Date date1, Date date2) {

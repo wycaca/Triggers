@@ -53,19 +53,23 @@ public class SensorService {
                             userInfo.setLongitude(longitude);
                             addUserInfo(userInfo);
                         } else {
-                            Log.e(TAG, "cannot get location info");
+                            Log.e(TAG, "cannot get location info, so get it from database");
                         }
                     }
                 });
     }
 
-    public String getWifiSSID() {
-        WifiManager wifiMgr = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+    public static String getWifiSSID(Context context) {
+        WifiManager wifiMgr = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        assert wifiMgr != null;
         int wifiState = wifiMgr.getWifiState();
-        WifiInfo info = wifiMgr.getConnectionInfo();
-        String wifiId = info != null ? info.getSSID() : null;
-
-        return wifiId;
+        if(wifiState == WifiManager.WIFI_STATE_ENABLED) {
+            WifiInfo info = wifiMgr.getConnectionInfo();
+            return info != null ? info.getSSID().replace("\"", "") : null;
+        } else {
+            Log.e(TAG, "wifi state is not correct: " + wifiState);
+        }
+        return null;
     }
 
     public void addUserInfo(UserInfo newUserInfo) {

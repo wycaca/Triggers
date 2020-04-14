@@ -25,9 +25,16 @@ public class TriggerService {
         intent.setAction(triggerInfo.getTaskName());
         PendingIntent operation = PendingIntent.getService(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        if (triggerInfo.getIsAlarm()) {
+        if (triggerInfo.getStrParam1() != null) {
+            intent.putExtra(TaskService.EXTRA_PARAM1, triggerInfo.getStrParam1());
+        }
+
+        if (triggerInfo.getIsAlarm() != null && triggerInfo.getIsAlarm()) {
             Log.d(TAG, "add " + triggerInfo.getTaskName() +" at: " + DateUtils.getDateString(triggerInfo.getTime()));
             mAlarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerInfo.getTime(), operation);
+        } else {
+            Log.d(TAG, "add " + triggerInfo.getTaskName());
+            mContext.startService(intent);
         }
     }
 }

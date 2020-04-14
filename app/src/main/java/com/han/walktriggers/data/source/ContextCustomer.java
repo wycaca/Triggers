@@ -1,6 +1,7 @@
 package com.han.walktriggers.data.source;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -79,7 +80,7 @@ public class ContextCustomer {
                 history.setProgress(progress);
 
                 historyList.add(history);
-                Log.d(TAG, goalName + " goalNum: " + goalNum + " timestamp: " + timestamp);
+                Log.d(TAG, history.toString());
             }
         }
         cursor.close();
@@ -91,28 +92,51 @@ public class ContextCustomer {
         Uri trackerUri = Uri.parse(historyUri);
         ContentResolver resolver = mContext.getContentResolver();
         Cursor cursor = resolver.query(trackerUri, null, null, null, null);
-        if (cursor != null) {
-            if (cursor.moveToNext()) {
-                int hId = cursor.getInt(cursor.getColumnIndex("h_id"));
-                int uId = cursor.getInt(1);
-                Date timestamp = Converters.fromTimestamp(cursor.getLong(2));
-                int stepNum = cursor.getInt(3);
-                String goalName = cursor.getString(4);
-                int goalNum = cursor.getInt(5);
-                int progress = cursor.getInt(6);
+        try {
+            if (cursor != null) {
+                if (cursor.moveToNext()) {
+                    int hId = cursor.getInt(cursor.getColumnIndex("h_id"));
+                    int uId = cursor.getInt(1);
+                    Date timestamp = Converters.fromTimestamp(cursor.getLong(2));
+                    int stepNum = cursor.getInt(3);
+                    String goalName = cursor.getString(4);
+                    int goalNum = cursor.getInt(5);
+                    int progress = cursor.getInt(6);
 
-                history.setHId(hId);
-                history.setUId(uId);
-                history.setTimestamp(timestamp);
-                history.setStepNum(stepNum);
-                history.setGoalName(goalName);
-                history.setGoalNum(goalNum);
-                history.setProgress(progress);
+                    history.setHId(hId);
+                    history.setUId(uId);
+                    history.setTimestamp(timestamp);
+                    history.setStepNum(stepNum);
+                    history.setGoalName(goalName);
+                    history.setGoalNum(goalNum);
+                    history.setProgress(progress);
 
-                Log.d(TAG, goalName + " goalNum: " + goalNum + " timestamp: " + timestamp);
+                    Log.d(TAG, history.toString());
+                }
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
             }
         }
-        cursor.close();
         return history;
+    }
+
+    public void updateHistory(History history) {
+        ContentValues values = new ContentValues();
+        Uri trackerUri = Uri.parse(historyUri);
+        ContentResolver resolver = mContext.getContentResolver();
+        String goalName = history.getGoalName();
+        int goalNum = history.getGoalNum();
+        int stepNum = history.getStepNum();
+        int progress = Math.round((float) stepNum / (float) goalNum * 100);
+        int hId = history.getHId();
+
+        values.put("hId", hId);
+        values.put("goalName", goalName);
+        values.put("goalNum", goalNum);
+        values.put("progress", progress);
+
+        resolver.insert(trackerUri, values);
     }
 }
