@@ -42,6 +42,8 @@ public class TaskService extends IntentService {
 
     public static final String ACTION_SET_GOAL = "com.han.walktriggers.action.ACTION_SET_GOAL";
 
+    public static final String ACTION_PUSH_WEATHER = "com.han.walktriggers.action.ACTION_PUSH_WEATHER";
+
     public static final String EXTRA_PARAM1 = "com.han.walktriggers.extra.PARAM1";
     private static final String EXTRA_PARAM2 = "com.han.walktriggers.extra.PARAM2";
 
@@ -108,6 +110,9 @@ public class TaskService extends IntentService {
                 final String name = intent.getStringExtra(EXTRA_PARAM1);
                 final int num = intent.getIntExtra(EXTRA_PARAM2, 0);
                 handleActionSetGoal(name, num);
+            } else if (ACTION_PUSH_WEATHER.equals(action)) {
+                final String main = intent.getStringExtra(EXTRA_PARAM1);
+                pushWeatherNotification(main);
             }
         }
     }
@@ -309,14 +314,14 @@ public class TaskService extends IntentService {
 //        weatherService.addWeatherRequest(weatherSp.getFloat("lat", 0), weatherSp.getFloat("lon", 0));
         if (userInfo != null && userInfo.getLatitude() != null) {
             Log.d(TAG, "check pass, do weather action");
-            weatherService.addWeatherRequest(userInfo.getLatitude(), userInfo.getLongitude());
-            pushWeatherNotification();
+            weatherService.addWeatherRequest(userInfo.getLatitude(), userInfo.getLongitude(), 1);
+            weatherService.addWeatherRequest(userInfo.getLatitude(), userInfo.getLongitude(), 2);
+//            pushWeatherNotification();
         }
     }
 
-    // todo Notification manage
     // todo same weather -> different triggers
-    private void pushWeatherNotification() {
+    private void pushWeatherNotification(String main) {
         NotificationInfo notificationInfo = new NotificationInfo();
 
         String title = "Today Weather";
@@ -324,39 +329,48 @@ public class TaskService extends IntentService {
 
         // get weather info
         Weather weather = weatherService.getNewestWeather();
-        Log.d(TAG, weather.getCityName());
-        // notification
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(weather.toString());
-        switch (weather.getMain()) {
-            case "Rain":
-                iconId = R.drawable.ic_rain;
-                stringBuilder.append("You'd better take an umbrella. ");
-                break;
-            case "Snow":
-                iconId = R.drawable.ic_snow;
-                stringBuilder.append("You'd better stay at home. ");
-                break;
-            case "Clouds":
-                iconId = R.drawable.ic_cloud;
-                break;
-            default:
-                iconId = R.drawable.ic_sunny;
-                stringBuilder.append("Have a nice day. ");
-        }
-        if(weather.getTemp() > 30) {
-            stringBuilder.append("Today is very hot.");
-        } else if (weather.getTemp() < 5) {
-            stringBuilder.append("Today is very clod.");
+        Log.d(TAG, "API1: " + weather.getCityName() + "  " + weather.getMain());
+        Log.d(TAG, "API2: " + main);
+
+        // check two weather information from different source is same
+        if (weather.getMain().toLowerCase().contains(main)
+                || (weather.getMain().equals("Clear") & (main.contains("sunny") || main.contains("clear") || main.contains("night")))) {
+            Log.d(TAG, "weather information from two API is same, push to user");
+            // notification
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(weather.toString());
+            switch (weather.getMain()) {
+                case "Rain":
+                    iconId = R.drawable.ic_rain;
+                    stringBuilder.append("You'd better take an umbrella. ");
+                    break;
+                case "Snow":
+                    iconId = R.drawable.ic_snow;
+                    stringBuilder.append("You'd better stay at home. ");
+                    break;
+                case "Clouds":
+                    iconId = R.drawable.ic_cloud;
+                    break;
+                default:
+                    iconId = R.drawable.ic_sunny;
+                    stringBuilder.append("Have a nice day. ");
+            }
+            if (weather.getTemp() > 30) {
+                stringBuilder.append("Today is very hot.");
+            } else if (weather.getTemp() < 5) {
+                stringBuilder.append("Today is very clod.");
+            } else {
+                stringBuilder.append("Keep health.");
+            }
+
+            notificationInfo.setTitle(title);
+            notificationInfo.setMessage(stringBuilder.toString());
+            notificationInfo.setLargeIconId(iconId);
+
+            notificationService.pushNotification(notificationInfo);
         } else {
-            stringBuilder.append("Keep health.");
+            Log.d(TAG, "weather information from two API is not same, stop push to user");
         }
-
-        notificationInfo.setTitle(title);
-        notificationInfo.setMessage(stringBuilder.toString());
-        notificationInfo.setLargeIconId(iconId);
-
-        notificationService.pushNotification(notificationInfo);
     }
 
 

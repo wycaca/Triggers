@@ -1,6 +1,9 @@
 weatherApi=https://api.openweathermap.org/data/2.5/weather?
 apiId=2e8962a7c5a75b5dc185b1811c573002
 
+weatherApi2=http://api.weatherstack.com/current?access_key=
+apiId2=2edbff4c09f91ea54db231b82d90e0f4
+
 goalUri=content://com.han.walktracker.provider/goals
 historyUri=content://com.han.walktracker.provider/history
 

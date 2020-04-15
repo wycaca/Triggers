@@ -14,7 +14,7 @@ import com.han.walktriggers.data.AppDataBase;
 import com.han.walktriggers.entity.UserInfo;
 import com.han.walktriggers.data.dao.UserInfoDao;
 
-import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 public class SensorService {
     private static final String TAG = "sensorService";
@@ -41,11 +41,9 @@ public class SensorService {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
                             // save 0.00 and protect user privacy
-                            BigDecimal bg = new BigDecimal(location.getLatitude());
-                            float latitude = bg.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-
-                            bg = new BigDecimal(location.getLongitude());
-                            float longitude = bg.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
+                            DecimalFormat df = new DecimalFormat("#.00");
+                            float latitude = Float.parseFloat(df.format(location.getLatitude()));
+                            float longitude = Float.parseFloat(df.format(location.getLongitude()));
 
                             Log.d(TAG, "latitude: " + latitude + ", longitude: " + longitude);
                             UserInfo userInfo = new UserInfo();

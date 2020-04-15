@@ -18,7 +18,7 @@ public interface WeatherDao {
     @Delete
     void delWeather(Weather weather);
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateWeather(Weather ... weather);
 
     @Query("select * from weather order by timestamp desc limit 1")
