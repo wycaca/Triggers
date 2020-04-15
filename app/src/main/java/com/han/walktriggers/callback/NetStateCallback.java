@@ -1,4 +1,4 @@
-package com.han.walktriggers.receiver;
+package com.han.walktriggers.callback;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

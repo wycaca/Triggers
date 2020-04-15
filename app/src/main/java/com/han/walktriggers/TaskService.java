@@ -17,7 +17,7 @@ import com.han.walktriggers.entity.UserInfo;
 import com.han.walktriggers.data.source.WeatherService;
 import com.han.walktriggers.entity.Weather;
 import com.han.walktriggers.data.source.SensorService;
-import com.han.walktriggers.receiver.NetStateCallback;
+import com.han.walktriggers.callback.NetStateCallback;
 import com.han.walktriggers.trigger.NotificationService;
 import com.han.walktriggers.utils.DateUtils;
 import com.han.walktriggers.utils.ProperUtil;
@@ -65,20 +65,6 @@ public class TaskService extends IntentService {
         intent.setAction(ACTION_WEATHER);
         context.startService(intent);
     }
-
-    /**
-     * Starts this service to perform action Baz with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see IntentService
-     */
-//    public static void startActionBaz(Context context, String param1, String param2) {
-//        Intent intent = new Intent(context, TaskIntentService.class);
-//        intent.setAction(ACTION_BAZ);
-//        intent.putExtra(EXTRA_PARAM1, param1);
-//        intent.putExtra(EXTRA_PARAM2, param2);
-//        context.startService(intent);
-//    }
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -297,10 +283,6 @@ public class TaskService extends IntentService {
         }
     }
 
-    /**
-     * Handle action Foo in the provided background thread with the provided
-     * parameters.
-     */
     private void handleActionWeather() {
         Log.d(TAG, "start handel weather action");
 
@@ -310,17 +292,16 @@ public class TaskService extends IntentService {
         sensorService.setLocationInfo();
 
         UserInfo userInfo = sensorService.getUserInfo();
-        // send a weather request if success, save the weather info in database
-//        weatherService.addWeatherRequest(weatherSp.getFloat("lat", 0), weatherSp.getFloat("lon", 0));
         if (userInfo != null && userInfo.getLatitude() != null) {
             Log.d(TAG, "check pass, do weather action");
+            // send weather request
             weatherService.addWeatherRequest(userInfo.getLatitude(), userInfo.getLongitude(), 1);
             weatherService.addWeatherRequest(userInfo.getLatitude(), userInfo.getLongitude(), 2);
 //            pushWeatherNotification();
         }
     }
 
-    // todo same weather -> different triggers
+    // same weather -> push
     private void pushWeatherNotification(String main) {
         NotificationInfo notificationInfo = new NotificationInfo();
 
@@ -372,15 +353,4 @@ public class TaskService extends IntentService {
             Log.d(TAG, "weather information from two API is not same, stop push to user");
         }
     }
-
-
-
-    /**
-     * Handle action Baz in the provided background thread with the provided
-     * parameters.
-     */
-//    private void handleActionBaz(String param1, String param2) {
-//        // TODO: Handle action Baz
-//        throw new UnsupportedOperationException("Not yet implemented");
-//    }
 }

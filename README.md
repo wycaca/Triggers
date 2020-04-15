@@ -1,66 +1,39 @@
 # WalkTriggers
 
-## data
-+ ### message
-    This part includes getting and pushing messages
+## data/source
++ ### ContextCustomer
 
-  - AlarmService
++ ### SensorService
+        This part manages senors and system info
 
-    This service is used to manage the alarm notification, such as: 9:00a.m. check weather
++ ### WeatherService
+        This service includes weather api, and Weather repository
 
-  - MessageReceive
+## callback/NetStateCallback
+    This class can add net state call back
 
-    This can get message for other apps and call different actions with action names
+## Trigger
++ ### NotificationService
+      This part manages notification
 
-+ ### online
-    
-    This part includes online service manage
-  
-  - WeatherDao
-    
-    Manage Weather data
-  
-  - WeatherService
-    
-    This service includes weather api, and Weather repository
++ ### TriggerService
+      This part manages trigger
 
-+ ### sensor
-    
-    This part manages senors and system info
-  
-  - SensorService
-    
-    Sensor manage service and also as userInfo repository, such as gps and wifi
-  
-  - UserInfoDao
-    
-    UserInfo includes location information and other user information
-   
 ## TaskService
-
-   This service includes all the actions
+    This service includes all the actions
 
 
 ~~framework background~~
 
-    //todo manage triggers, add them easily
-    // manage data source
-    // manage notification
+~~manage triggers, add them easily~~
+~~manage data source~~
+~~manage notification~~
 
-    //todo other apps has context provider
-    // access;
-
-    // config file? data source
-    // different data source -> complex
-    // more api -> improve
-    // different -> don't call trigger
-
-    // more complex notifications (images, buttons...)
-    // step histories, less, more -> notification
-
-    // 5 triggers
-    // in report -> screen shots -> how the trigger works
-    // highlight ->
+~~other apps has context provider, access~~
+~~different data source -> complex~~
+~~more api -> improve~~
+~~more complex notifications (images, buttons...)~~
+~~step histories, less, more -> notification~~
 
     // behaviour changes
     // -> different user types -> type of triggers

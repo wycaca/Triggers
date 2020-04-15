@@ -39,27 +39,33 @@ public class MainActivity extends Activity {
         TriggerInfo triggerInfo = new TriggerInfo();
         triggerInfo.setTaskName(TaskService.ACTION_WEATHER);
         // for test
-        Long times = System.currentTimeMillis() + 10 * 1000;
-        triggerInfo.setTime(times);
+//        Long times = System.currentTimeMillis() + 10 * 1000;
+//        triggerInfo.setTime(times);
+
+        // check weather at 9:00
+        triggerInfo.setTime(9);
         triggerService.addTrigger(triggerInfo);
 
         // check progress trigger at 19:00
         triggerInfo.setTaskName(TaskService.ACTION_CHECK_PROGRESS);
-//        triggerInfo.setTime(19);
+        triggerInfo.setTime(19);
 //        triggerService.addTrigger(triggerInfo);
 
-        // check history
-//        triggerInfo.setTaskName(TaskService.ACTION_CHECK_HISTORY);
-//        triggerService.addTrigger(triggerInfo);
+        // check history at 22:00
+        triggerInfo.setTaskName(TaskService.ACTION_CHECK_HISTORY);
+        triggerInfo.setTime(22);
+        triggerService.addTrigger(triggerInfo);
 
-        // goal suggestion
+        // goal suggestion at 17:00
         triggerInfo.setTaskName(TaskService.ACTION_SUGGEST_GOAL);
-//        triggerService.addTrigger(triggerInfo);
+        triggerInfo.setTime(17);
+        triggerService.addTrigger(triggerInfo);
 
         // wifi ssid check
+        // do not need task time, auto check when network state is changed
         triggerInfo = new TriggerInfo();
         triggerInfo.setTaskName(TaskService.ACTION_CHECK_WIFI_SSID);
-//        triggerService.addTrigger(triggerInfo);
+        triggerService.addTrigger(triggerInfo);
     }
 
     @Override
