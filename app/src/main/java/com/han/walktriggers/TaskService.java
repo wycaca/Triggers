@@ -29,8 +29,7 @@ import java.util.List;
  * same intent, but different tasks have different action names
  */
 public class TaskService extends IntentService {
-    // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    // todo: two or three weather api, compare and make sure
+    // two or three weather api, compare and make sure
     public static final String ACTION_WEATHER = "com.han.walktriggers.action.WEATHER";
     public static final String ACTION_CHECK_PROGRESS = "com.han.walktriggers.action.CHECK_PROGRESS";
     // wifi SSID check, at home -> push step number and progress
@@ -41,7 +40,6 @@ public class TaskService extends IntentService {
     public static final String ACTION_SUGGEST_GOAL = "com.han.walktriggers.action.ACTION_SUGGEST_GOAL";
 
     public static final String ACTION_SET_GOAL = "com.han.walktriggers.action.ACTION_SET_GOAL";
-
     public static final String ACTION_PUSH_WEATHER = "com.han.walktriggers.action.ACTION_PUSH_WEATHER";
 
     public static final String EXTRA_PARAM1 = "com.han.walktriggers.extra.PARAM1";
@@ -145,7 +143,7 @@ public class TaskService extends IntentService {
                 notificationInfo.setProgress(history.getProgress());
                 notificationService.pushNotification(notificationInfo);
             }
-            Log.d(TAG, SSID);
+            Log.d(TAG, "SSID: " + SSID);
         }
     }
 
